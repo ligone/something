@@ -1,0 +1,107 @@
+<!DOCTYPE=HTML>
+<html>
+	<head>
+		
+	<link rel="stylesheet" href="style.css">
+	<link href="https://fonts.googleapis.com/css?family=Lato:900" rel="stylesheet">
+	
+	<title>something to do with GST</title>
+
+	<script>
+
+		function addGST(price)
+		{
+			return price * 1.1;
+		}
+
+
+
+		function getQueryVariable(variable)
+		{
+  			var query = window.location.search.substring(1);
+  			var vars = query.split("&");
+  			for (var i=0;i<vars.length;i++)
+  			{
+	    		var pair = vars[i].split("=");
+	    		if (pair[0] == variable) 
+	    		{
+	      			return pair[1];
+	    		}
+			}
+		alert('Query Variable ' + variable + ' not found');
+		}
+
+		var q = getQueryVariable("q");
+
+	</script>
+	
+	</head>
+	
+	<body>
+	
+		<div class="w3-card-2 w3-slim topnav" id="topnav" style="position: fixed; top: 0px; z-index:2;">
+			
+			<div style="overflow:auto;">
+				
+				<ul class="w3-navbar w3-left" style="width:100%;overflow:hidden;height:44px z-index:4;">
+					
+					<li><a href="index.html" title="HTML Tutorial">HOME</a></li>
+					<li><a href="products.html" title="CSS Tutorial">PRODUCTS</a></li>
+					<li><a href="checkout.html" title="PHP Tutorial">CHECKOUT/ORDER</a></li>
+					<li><a href="about.html" title="JavaScript Tutorial">ABOUT US</a></li>
+					<li><a href="contact.html" title="SQL Tutorial">CONTACT</a></li>
+								
+				</ul>
+		    
+		    </div>
+			
+		</div>
+
+		<div class="multi-use-container">
+
+			<div class="richard-ac-content" style="top:40%;height: auto;">
+
+				<div style="height:95%;width:95%px;position:relative;padding: 10px;">
+
+				<p>
+					Thanks for deciding to order! Please fill in your details below.
+				</p>
+
+					<div style="display: table;margin: 0 auto;">
+
+						<form style="text-align: left;">
+
+							<table>
+								<tr>
+									<td>Name:</td><td><input type="in" name="name" size="20" style="background-color: gray;" /></td>
+								</tr>
+								<tr>
+									<td>Email:</td><td><input type="inp" name="email" size="20" style="background-color: gray;" /></td>
+								</tr>
+								<tr>
+									<td>Contact Number: </td><td><input type="in" name="number" size="20" style="background-color: gray;" /></td>
+								</tr>
+								<tr>
+									<td>Product:</td><td style="text-align: center;"><input type="button" name="bleh" value="Hosting"/>&nbsp;<input type="button" name="bleh" value="VPS" />&nbsp;<input type="button" name="bleh" value="Dedicated" /><br /><input type="button" name="bleh" value="Small"/>&nbsp;<input type="button" name="bleh" value="Medium" />&nbsp;<input type="button" name="bleh" value="Large" /></td>
+								</tr>
+							</table>
+
+						</form>
+
+					</div>
+
+				<script>
+
+					document.write(q);
+
+				</script>
+
+				</div>
+
+			</div>
+
+		</div>
+	
+	</body>
+	
+</html>
