@@ -64,18 +64,20 @@ private struct JuliaInsetFrame: View {
     var body: some View {
         if let c = model.juliaPreviewParameter {
             let rect = model.juliaInsetRect
-            ZStack(alignment: .bottom) {
-                RoundedRectangle(cornerRadius: 14, style: .continuous)
-                    .strokeBorder(.white.opacity(0.55), lineWidth: 1)
-                    .shadow(color: .black.opacity(0.6), radius: 10, y: 4)
-                Text("Julia set for c = \(FractalFormat.complex(re: c.re, im: c.im, scale: 1e-4))")
-                    .font(.system(size: 10.5, weight: .medium, design: .monospaced))
-                    .foregroundStyle(.white.opacity(0.9))
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(.black.opacity(0.55), in: Capsule())
-                    .offset(y: 26)
-            }
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .strokeBorder(.white.opacity(0.55), lineWidth: 1)
+                .shadow(color: .black.opacity(0.6), radius: 10, y: 4)
+                .overlay(alignment: .bottomTrailing) {
+                    Text("Julia set · c = \(FractalFormat.complex(re: c.re, im: c.im, scale: 1e-3))")
+                        .font(.system(size: 10.5, weight: .medium, design: .monospaced))
+                        .foregroundStyle(.white.opacity(0.9))
+                        .lineLimit(1)
+                        .fixedSize()
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(.black.opacity(0.55), in: Capsule())
+                        .offset(y: 26)
+                }
             .frame(width: rect.width, height: rect.height)
             .position(x: rect.midX, y: rect.midY)
             .allowsHitTesting(false)

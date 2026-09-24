@@ -89,10 +89,11 @@ final class FractalModel {
         )
     }
 
-    /// Where the Julia preview sits, in stage points.
+    /// Where the Julia preview sits, in stage points: the right edge, just
+    /// below the HUD, clear of the tour caption and the hint.
     var juliaInsetRect: CGRect {
-        let side = min(260, max(150, min(viewSize.width, viewSize.height) * 0.32))
-        return CGRect(x: viewSize.width - side - 18, y: viewSize.height - side - 58, width: side, height: side)
+        let side = min(250, max(150, min(viewSize.width, viewSize.height) * 0.3))
+        return CGRect(x: viewSize.width - side - 16, y: 96, width: side, height: side)
     }
 
     /// The parameter of the Julia set previewed in the inset, if any.
