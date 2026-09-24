@@ -4,7 +4,19 @@
 
 Menagerie is a gallery of nine interactive exhibits. Each one is a small, complete program that shows a different kind of work: GPU programming, physically based rendering, simulation, classic algorithms, computer algebra, game-tree search, natural-language processing and real-time audio synthesis. It is written in Swift with SwiftUI and has no third-party dependencies. Everything runs on your Mac, with no network access.
 
-<!-- EXHIBITS -->
+## The exhibits
+
+| | Exhibit | What's inside |
+| --- | --- | --- |
+| **See** | **Fractal Explorer** | Mandelbrot and Julia sets in a Metal shader. Past 32-bit precision it switches to double-float arithmetic (TwoSum/TwoProduct), reaching about 10¹⁰× zoom. Includes smooth coloring through Oklab palettes, live Julia previews on hover, and a guided tour of minibrots located by Newton's method along van Wijk–Nuij optimal flight paths. |
+| | **Path Tracer** | A progressive Monte Carlo renderer on every CPU core. It has a SAH BVH, next-event estimation with multiple importance sampling, and glass with Fresnel, total internal reflection and Beer–Lambert absorption. A thin-lens camera with click-to-focus and ACES tone mapping finish the image. |
+| | **Particle Life** | Thousands of particles in a toroidal world, attracting and repelling by species. A counting-sort cell grid and SIMD8 force kernels keep it fast, and the results are bit-for-bit deterministic. An editable attraction matrix plots its force curve live. |
+| **Think** | **Maze Lab** | Seven maze generators, including Wilson's uniform spanning trees and Kruskal's with union–find, and six search algorithms animated cell by cell. Paint walls and mud to watch the route re-solve live, then compare every solver in Swift Charts. |
+| | **Calculus Workbench** | A Pratt parser, exact rational arithmetic, symbolic derivatives and a simplifier. Brent root finding, adaptive Simpson integration and Taylor series are all plotted, with hover tangents and draggable bounds. |
+| | **Connect Four** | A bitboard engine: negamax with alpha-beta, iterative deepening, a transposition table and Pons's non-losing-move pruning. It shows how it rates every column while it thinks. |
+| | **Language Lab** | Apple's NaturalLanguage framework provides language ID, sentiment, entities, parts of speech, word-vector analogies and sentence similarity. A portable engine adds readability formulas, a syllable counter validated against the CMU dictionary, MTLD and RAKE keyphrases. |
+| **Hear** | **Sound of Sorting** | Thirteen algorithms, visualized and sonified by a 16-voice synth on `AVAudioSourceNode`. Includes a four-lane race mode. |
+| | **Synthesizer** | An allocation-free polyphonic synth: PolyBLEP oscillators, a zero-delay-feedback filter, envelopes, an LFO, chorus, delay and an FDN reverb. A generative sequencer and a keyboard you can play with your computer's keys drive it, and an oscilloscope and spectrum show the output. |
 
 ## Running it
 
