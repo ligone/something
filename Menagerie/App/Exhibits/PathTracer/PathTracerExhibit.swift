@@ -1,15 +1,24 @@
 import SwiftUI
-import TracerKit
 
+/// A progressive Monte Carlo path tracer that converges live on screen.
+///
+/// The TracerKit engine renders on every core in a background session. This
+/// view shows the result, turns mouse input into camera moves, and exposes
+/// the lens, light transport and render settings.
 struct PathTracerExhibit: View {
+    @State private var model = PathTracerModel()
+
     var body: some View {
         ExhibitLayout(.pathTracer) {
-            ContentUnavailableView("Under construction", systemImage: Exhibit.pathTracer.symbol)
+            PathTracerStage(model: model)
+                .stageHUD(.topLeading) {
+                    PathTracerHUD(model: model)
+                }
+                .stageHint("Drag to orbit · Scroll to dolly · Click to focus · Double-click to reset")
         } controls: {
-            ControlSection("Controls") {
-                Text("Coming soon.")
-                    .foregroundStyle(.secondary)
-            }
+            PathTracerControls(model: model)
         }
+        .onAppear { model.start() }
+        .onDisappear { model.stop() }
     }
 }
