@@ -1,0 +1,99 @@
+name: Menagerie
+
+on:
+  push:
+    paths:
+      - "Menagerie/**"
+      - ".github/workflows/menagerie.yml"
+  pull_request:
+    paths:
+      - "Menagerie/**"
+      - ".github/workflows/menagerie.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: menagerie-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: Menagerie
+
+jobs:
+  engines-linux:
+    name: Engines on Linux
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Toolchain
+        run: swift --version
+      - name: Test every engine
+        run: swift test --parallel
+
+  app-macos:
+    name: App on macOS (${{ matrix.xcode }} Xcode)
+    runs-on: macos-15
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        xcode: [default, newest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: |
+          ls -d /Applications/Xcode*.app
+          if [[ "${{ matrix.xcode }}" == "newest" ]]; then
+            XCODE="$(ls -d /Applications/Xcode_*.app | grep -viE 'beta|_rc|release_candidate' | sort -V | tail -1)"
+            sudo xcode-select --switch "$XCODE/Contents/Developer"
+          fi
+          xcodebuild -version
+          swift --version
+
+      - name: Test engines
+        run: swift test --parallel
+
+      - name: Build the app bundle
+        run: Scripts/build-app.sh --universal
+
+      - name: Tour the app and capture screenshots
+        run: |
+          mkdir -p build/screenshots
+          ./build/Menagerie.app/Contents/MacOS/Menagerie --capture "$PWD/build/screenshots" --dwell 5 &
+          APP_PID=$!
+          for _ in $(seq 1 150); do
+            kill -0 "$APP_PID" 2>/dev/null || break
+            sleep 1
+          done
+          if kill -0 "$APP_PID" 2>/dev/null; then
+            echo "::error::The app did not finish its capture tour in time"
+            kill "$APP_PID"
+            exit 1
+          fi
+          wait "$APP_PID"
+          ls -la build/screenshots
+
+      - name: Package the app
+        run: |
+          ditto -c -k --keepParent build/Menagerie.app build/Menagerie.zip
+          file build/Menagerie.app/Contents/MacOS/Menagerie
+
+      - name: Upload the app
+        uses: actions/upload-artifact@v4
+        with:
+          name: Menagerie-app-${{ matrix.xcode }}-xcode
+          path: Menagerie/build/Menagerie.zip
+          if-no-files-found: error
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots-${{ matrix.xcode }}-xcode
+          path: Menagerie/build/screenshots
+          if-no-files-found: warn
