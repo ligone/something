@@ -66,7 +66,7 @@ enum Exhibit: String, CaseIterable, Identifiable, Hashable {
         case .languageLab:
             "Sentiment, entities, parts of speech, word analogies and readability, computed on device with nothing sent to a server."
         case .sorting:
-            "Ten sorting algorithms, visualized and sonified: every comparison sounds a pitch."
+            "Thirteen sorting algorithms, visualized and sonified: every array access sounds a pitch."
         case .synthesizer:
             "Band-limited oscillators, a zero-delay-feedback filter, envelopes and effects. Play it with your keyboard."
         }
