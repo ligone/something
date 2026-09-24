@@ -110,3 +110,18 @@ jobs:
           name: screenshots-${{ matrix.xcode }}-xcode
           path: Menagerie/build/screenshots
           if-no-files-found: warn
+
+      # The one-line setup a person runs on their Mac, end to end: download the
+      # script from GitHub, clone into a fresh folder, build, install and add
+      # the Desktop shortcut. Claude Code isn't launched on CI.
+      - name: One-line Mac setup (curl | bash)
+        if: matrix.xcode == 'newest' && github.event_name == 'push'
+        env:
+          SETUP_URL: https://raw.githubusercontent.com/${{ github.repository }}/refs/heads/${{ github.ref_name }}/Menagerie/Scripts/setup-mac.sh
+        run: |
+          rm -rf "$HOME/Desktop/Menagerie" "$HOME/Applications/Menagerie.app"
+          curl -fsSL "$SETUP_URL" \
+            | MENAGERIE_DIR="$RUNNER_TEMP/fresh-clone" MENAGERIE_BRANCH="${{ github.ref_name }}" MENAGERIE_CLAUDE=none bash
+          test -d "$RUNNER_TEMP/fresh-clone/Menagerie/build/Menagerie.app"
+          test -L "$HOME/Desktop/Menagerie"
+          codesign --verify --strict "$HOME/Applications/Menagerie.app"

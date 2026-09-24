@@ -35,7 +35,27 @@ These screenshots come straight from CI: the workflow launches the built app on 
 
 You need **macOS 14 Sonoma or later**. Building also needs Xcode 15 or later, or its Command Line Tools.
 
-**Install it with a shortcut on your Desktop** (recommended):
+**One command on your Mac** (recommended). Paste this into Terminal:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/ligone/something/refs/heads/claude/hopeful-babbage-djjew8/Menagerie/Scripts/setup-mac.sh | bash
+```
+
+It does the following:
+
+1. It checks your Mac.
+2. It clones this repository into `~/Developer/something`, or updates the clone if it's already there.
+3. It builds the app, installs it in `~/Applications` and puts a **Menagerie** shortcut on your Desktop.
+4. It opens Claude Code in the project and continues the cloud session that built the app, with its whole conversation. If Claude Code isn't installed, it offers to install it first.
+
+It's safe to run again, and it never overwrites local changes. Optional settings go before `bash`:
+
+- `MENAGERIE_CLAUDE=fresh` starts a new Claude session from a handoff note instead of continuing the old one.
+- `MENAGERIE_CLAUDE=remote` starts a session you can also steer from the Claude app on your phone.
+- `MENAGERIE_CLAUDE=none` skips Claude.
+- `MENAGERIE_DIR=path` clones somewhere else.
+
+**Already have a clone?** Install the app with a Desktop shortcut:
 
 ```sh
 cd Menagerie
@@ -88,7 +108,8 @@ Menagerie/
 │   └── Exhibits/        # One folder per exhibit: SwiftUI views + platform glue
 ├── Scripts/
 │   ├── build-app.sh     # Builds, bundles, draws the icon and signs the app
-│   └── install.sh       # Installs into ~/Applications with a Desktop shortcut
+│   ├── install.sh       # Installs into ~/Applications with a Desktop shortcut
+│   └── setup-mac.sh     # One-command setup: clone, install, open Claude Code
 └── Docs/Screenshots/    # Captured by CI
 ```
 
