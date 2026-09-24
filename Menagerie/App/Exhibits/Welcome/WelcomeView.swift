@@ -334,7 +334,7 @@ private struct Colophon: View {
                 Fact(value: "0", label: "third-party dependencies")
                 Fact(value: "100%", label: "on-device")
             }
-            Text("Built with SwiftUI, AppKit, Metal, AVFoundation, Accelerate, NaturalLanguage and Swift Charts. Every algorithm lives in a portable engine library with its own test suite, and those tests pass on Linux too.")
+            Text("Built with SwiftUI, AppKit, Metal, AVFoundation, NaturalLanguage and Swift Charts. Every algorithm lives in a portable engine library with its own test suite, and those tests pass on Linux too.")
                 .font(.callout)
                 .foregroundStyle(.secondary)
                 .frame(maxWidth: 760, alignment: .leading)

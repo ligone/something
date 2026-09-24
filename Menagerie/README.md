@@ -4,6 +4,8 @@
 
 Menagerie is a gallery of nine interactive exhibits. Each one is a small, complete program that shows a different kind of work: GPU programming, physically based rendering, simulation, classic algorithms, computer algebra, game-tree search, natural-language processing and real-time audio synthesis. It is written in Swift with SwiftUI and has no third-party dependencies. Everything runs on your Mac, with no network access.
 
+![The Fractal Explorer at 3.9 million times magnification, with a live Julia-set preview](Docs/Screenshots/fractal-explorer.jpg)
+
 ## The exhibits
 
 | | Exhibit | What's inside |
@@ -17,6 +19,17 @@ Menagerie is a gallery of nine interactive exhibits. Each one is a small, comple
 | | **Language Lab** | Apple's NaturalLanguage framework provides language ID, sentiment, entities, parts of speech, word-vector analogies and sentence similarity. A portable engine adds readability formulas, a syllable counter validated against the CMU dictionary, MTLD and RAKE keyphrases. |
 | **Hear** | **Sound of Sorting** | Thirteen algorithms, visualized and sonified by a 16-voice synth on `AVAudioSourceNode`. Includes a four-lane race mode. |
 | | **Synthesizer** | An allocation-free polyphonic synth: PolyBLEP oscillators, a zero-delay-feedback filter, envelopes, an LFO, chorus, delay and an FDN reverb. A generative sequencer and a keyboard you can play with your computer's keys drive it, and an oscilloscope and spectrum show the output. |
+
+### Gallery
+
+These screenshots come straight from CI: the workflow launches the built app on a macOS runner and captures every exhibit.
+
+| | |
+| --- | --- |
+| ![Path Tracer: a Cornell box with a mirror sphere and a glass sphere](Docs/Screenshots/path-tracer.jpg) | ![Particle Life: cells and worms emerging from an attraction matrix](Docs/Screenshots/particle-life.jpg) |
+| ![Maze Lab: A* threading a braided maze with mud patches](Docs/Screenshots/maze-lab.jpg) | ![Calculus Workbench: x·sin(x) with its derivative, Taylor polynomial and a tangent read-out](Docs/Screenshots/calculus-workbench.jpg) |
+| ![Connect Four: Claude playing itself, with column-by-column evaluations](Docs/Screenshots/connect-four.jpg) | ![Language Lab: named entities highlighted in a news story](Docs/Screenshots/language-lab.jpg) |
+| ![Sound of Sorting: Quick Sort part-way through](Docs/Screenshots/sound-of-sorting.jpg) | ![Synthesizer: the generative sequencer playing, with oscilloscope and spectrum](Docs/Screenshots/synthesizer.jpg) |
 
 ## Running it
 
@@ -64,7 +77,8 @@ Menagerie/
 │   ├── Shell/           # App entry point, navigation, menus, icon, CI tour
 │   ├── DesignSystem/    # Shared layout, controls, stage overlays
 │   └── Exhibits/        # One folder per exhibit: SwiftUI views + platform glue
-└── Scripts/build-app.sh # Builds, bundles, draws the icon and signs the app
+├── Scripts/build-app.sh # Builds, bundles, draws the icon and signs the app
+└── Docs/Screenshots/    # Captured by CI
 ```
 
 The code is split into two layers:

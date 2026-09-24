@@ -36,7 +36,7 @@ enum Exhibit: String, CaseIterable, Identifiable, Hashable {
         case .welcome: "A cabinet of computational curiosities"
         case .fractals: "Infinite zoom on the GPU"
         case .pathTracer: "Physically based light, one ray at a time"
-        case .particleLife: "Artificial life from six numbers a pair"
+        case .particleLife: "Emergent creatures from simple rules"
         case .mazeLab: "Carve mazes, then watch search think"
         case .calculus: "Symbolic derivatives, roots and Taylor series"
         case .connectFour: "Play a bitboard alpha-beta engine"
@@ -58,7 +58,7 @@ enum Exhibit: String, CaseIterable, Identifiable, Hashable {
         case .particleLife:
             "Thousands of particles follow a handful of attraction rules and organize into cells, worms and swarms."
         case .mazeLab:
-            "Generate mazes five different ways, paint walls and mud, and race BFS, Dijkstra, A* and friends."
+            "Carve mazes seven different ways, paint walls and mud, and race BFS, Dijkstra, A* and friends."
         case .calculus:
             "Type any function to get its exact derivative, its roots and extrema, integrals, and Taylor approximations."
         case .connectFour:
@@ -108,13 +108,13 @@ enum Exhibit: String, CaseIterable, Identifiable, Hashable {
         case .welcome: []
         case .fractals: ["Metal", "GPU shaders", "Double-float math"]
         case .pathTracer: ["Monte Carlo", "Multithreading", "Optics"]
-        case .particleLife: ["Emergence", "Spatial hashing", "Canvas"]
+        case .particleLife: ["Emergence", "Spatial grids", "SIMD"]
         case .mazeLab: ["Graph search", "Spanning trees", "Swift Charts"]
         case .calculus: ["Parsing", "Computer algebra", "Numerics"]
         case .connectFour: ["Game trees", "Bitboards", "Alpha-beta"]
         case .languageLab: ["NaturalLanguage", "Embeddings", "NLP"]
         case .sorting: ["Algorithms", "AVAudioEngine", "Sonification"]
-        case .synthesizer: ["DSP", "Real-time audio", "Accelerate"]
+        case .synthesizer: ["DSP", "Real-time audio", "FFT"]
         }
     }
 

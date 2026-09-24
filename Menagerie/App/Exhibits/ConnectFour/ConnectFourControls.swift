@@ -201,10 +201,10 @@ struct ConnectFourSearchHUD: View {
 
     var body: some View {
         if model.isSearching || model.currentAnalysis != nil {
+            // Kept to two pills so it never collides with the status HUD on
+            // the left, even on a narrow stage; the status pill already says
+            // whose move the column chips are scoring.
             HStack(spacing: 8) {
-                if model.showsAnalysis, let perspective {
-                    StatPill("Scores for", perspective)
-                }
                 StatPill("Depth", depth)
                 StatPill("Nodes", ConnectFourFormat.count(model.liveNodes))
             }
@@ -217,13 +217,5 @@ struct ConnectFourSearchHUD: View {
         }
         guard let analysis = model.currentAnalysis else { return "—" }
         return analysis.isSolved ? "Solved" : "\(analysis.depth)"
-    }
-
-    /// Whose options the chips score: the player to move.
-    private var perspective: String? {
-        guard !model.game.isOver else { return nil }
-        let mover = model.game.playerToMove
-        guard let human = model.human else { return model.color(of: mover).name }
-        return mover == human ? "You" : "Claude"
     }
 }

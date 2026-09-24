@@ -110,7 +110,6 @@ extension LanguageLab {
                 HStack(spacing: 8) {
                     StatPill("Language", analysis.language.dominant.map(LanguageNames.name) ?? "Unknown")
                     StatPill("Words", analysis.readability.wordCount.formatted())
-                    StatPill("Sentences", analysis.sentences.count.formatted())
                     if let sentiment = analysis.overallSentiment {
                         StatPill("Sentiment", Format.signed(sentiment))
                     }
