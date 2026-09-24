@@ -12,12 +12,25 @@ final class ReadabilityReportTests: XCTestCase {
         XCTAssertEqual(report.letterCount, 17)
         XCTAssertEqual(report.polysyllableCount, 0)
 
-        XCTAssertEqual(report.fleschReadingEase, 206.835 - 1.015 * 6 - 84.6, accuracy: 1e-9)
-        XCTAssertEqual(report.fleschKincaidGrade, 0.39 * 6 + 11.8 - 15.59, accuracy: 1e-9)
-        XCTAssertEqual(report.gunningFog, 0.4 * 6, accuracy: 1e-9)
+        // Expected values are spelled out step by step with explicit types:
+        // long mixed-literal expressions can time out Xcode's type checker.
+        let wordsPerSentence: Double = 6
+        let lettersPer100Words: Double = 17.0 / 6.0 * 100.0
+        let sentencesPer100Words: Double = 1.0 / 6.0 * 100.0
+        let lettersPerWord: Double = 17.0 / 6.0
+
+        let ease: Double = 206.835 - 1.015 * wordsPerSentence - 84.6
+        let kincaid: Double = 0.39 * wordsPerSentence + 11.8 - 15.59
+        let fog: Double = 0.4 * wordsPerSentence
+        let colemanLiau: Double = 0.0588 * lettersPer100Words - 0.296 * sentencesPer100Words - 15.8
+        let automated: Double = 4.71 * lettersPerWord + 0.5 * wordsPerSentence - 21.43
+
+        XCTAssertEqual(report.fleschReadingEase, ease, accuracy: 1e-9)
+        XCTAssertEqual(report.fleschKincaidGrade, kincaid, accuracy: 1e-9)
+        XCTAssertEqual(report.gunningFog, fog, accuracy: 1e-9)
         XCTAssertEqual(report.smogIndex, 3.1291, accuracy: 1e-9)
-        XCTAssertEqual(report.colemanLiauIndex, 0.0588 * (17.0 / 6 * 100) - 0.296 * (1.0 / 6 * 100) - 15.8, accuracy: 1e-9)
-        XCTAssertEqual(report.automatedReadabilityIndex, 4.71 * 17.0 / 6 + 0.5 * 6 - 21.43, accuracy: 1e-9)
+        XCTAssertEqual(report.colemanLiauIndex, colemanLiau, accuracy: 1e-9)
+        XCTAssertEqual(report.automatedReadabilityIndex, automated, accuracy: 1e-9)
     }
 
     func testAveragesAcrossSentences() {

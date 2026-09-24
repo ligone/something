@@ -23,7 +23,7 @@ let engines = [
 
 // Engines that crunch numbers every frame stay optimized in debug builds too,
 // so pressing Run in Xcode still gives smooth simulations and real-time audio.
-let optimizedInDebug: Set<String> = ["ConnectFourKit", "LifeKit", "SortKit", "SynthKit", "TracerKit"]
+let optimizedInDebug: Set<String> = ["CalculusKit", "ConnectFourKit", "LifeKit", "SortKit", "SynthKit", "TracerKit"]
 
 var targets: [Target] = []
 for engine in engines {
