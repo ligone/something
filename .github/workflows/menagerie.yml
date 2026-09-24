@@ -79,6 +79,7 @@ jobs:
             exit 1
           fi
           wait "$APP_PID"
+          cp build/AppIcon.iconset/icon_512x512@2x.png build/screenshots/app-icon.png
           ls -la build/screenshots
 
       - name: Package the app
