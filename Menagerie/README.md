@@ -35,7 +35,16 @@ These screenshots come straight from CI: the workflow launches the built app on 
 
 You need **macOS 14 Sonoma or later**. Building also needs Xcode 15 or later, or its Command Line Tools.
 
-**Build a double-clickable app** (recommended):
+**Install it with a shortcut on your Desktop** (recommended):
+
+```sh
+cd Menagerie
+Scripts/install.sh
+```
+
+This builds the app, installs it in `~/Applications` (no administrator password needed) and puts a **Menagerie** shortcut on your Desktop. It also shows up in Spotlight. Run the script again at any time to update both.
+
+**Or just build the app bundle:**
 
 ```sh
 cd Menagerie
@@ -43,7 +52,7 @@ Scripts/build-app.sh          # add --universal for an Apple silicon + Intel bin
 open build/Menagerie.app
 ```
 
-The script compiles in release mode, assembles `build/Menagerie.app`, draws the app icon in code, and signs the bundle ad hoc.
+The build script compiles in release mode, assembles `build/Menagerie.app`, draws the app icon in code, and signs the bundle ad hoc.
 
 **Or run straight from source:**
 
@@ -54,7 +63,7 @@ swift run -c release Menagerie
 
 **Or open `Menagerie/Package.swift` in Xcode** and press ⌘R. The heavy engines are compiled with optimizations even in Debug, so the simulations stay smooth.
 
-**Or download a prebuilt app.** Every CI run uploads a universal `Menagerie-app` artifact on the [Actions tab](../../actions/workflows/menagerie.yml). The app is signed ad hoc, not notarized, so macOS will refuse to open the downloaded copy at first. To allow it, either right-click → **Open**, or go to **System Settings → Privacy & Security → Open Anyway**. You can also run `xattr -dr com.apple.quarantine Menagerie.app`.
+**Or download a prebuilt app.** Every CI run uploads a universal `Menagerie-app` artifact on the [Actions tab](https://github.com/ligone/something/actions/workflows/menagerie.yml). The app is signed ad hoc, not notarized, so macOS will refuse to open the downloaded copy at first. To allow it, either right-click → **Open**, or go to **System Settings → Privacy & Security → Open Anyway**. You can also run `xattr -dr com.apple.quarantine Menagerie.app`.
 
 ## Getting around
 
@@ -77,7 +86,9 @@ Menagerie/
 │   ├── Shell/           # App entry point, navigation, menus, icon, CI tour
 │   ├── DesignSystem/    # Shared layout, controls, stage overlays
 │   └── Exhibits/        # One folder per exhibit: SwiftUI views + platform glue
-├── Scripts/build-app.sh # Builds, bundles, draws the icon and signs the app
+├── Scripts/
+│   ├── build-app.sh     # Builds, bundles, draws the icon and signs the app
+│   └── install.sh       # Installs into ~/Applications with a Desktop shortcut
 └── Docs/Screenshots/    # Captured by CI
 ```
 

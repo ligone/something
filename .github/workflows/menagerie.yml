@@ -61,6 +61,15 @@ jobs:
       - name: Build the app bundle
         run: Scripts/build-app.sh --universal
 
+      - name: Install with a Desktop shortcut
+        run: |
+          Scripts/install.sh --universal
+          test -L "$HOME/Desktop/Menagerie"
+          test -x "$HOME/Desktop/Menagerie/Contents/MacOS/Menagerie"
+          codesign --verify --strict "$HOME/Applications/Menagerie.app"
+          Scripts/install.sh --universal
+          test ! -e "$HOME/Applications/Menagerie.app/Menagerie.app"
+
       - name: Verify Metal shaders
         run: ./build/Menagerie.app/Contents/MacOS/Menagerie --verify-shaders
 
