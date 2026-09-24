@@ -52,7 +52,7 @@ enum Exhibit: String, CaseIterable, Identifiable, Hashable {
         case .welcome:
             "Start here."
         case .fractals:
-            "Dive into the Mandelbrot and Julia sets with a Metal shader that emulates 64-bit floats to zoom a billion times deeper."
+            "Dive into the Mandelbrot and Julia sets with a Metal shader that emulates double precision to zoom ten billion times deep."
         case .pathTracer:
             "A progressive Monte Carlo renderer with glass, metal, soft shadows and depth of field, spread across every CPU core."
         case .particleLife:

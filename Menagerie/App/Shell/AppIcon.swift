@@ -1,5 +1,6 @@
 import AppKit
 import CoreGraphics
+import Metal
 
 /// The app icon, drawn in code: a phyllotaxis spiral (the seed pattern of a
 /// sunflower, where each seed turns by the golden angle) glowing inside a
@@ -143,6 +144,28 @@ enum CommandLineTools {
             }
             return true
         }
+        if arguments.contains("--verify-shaders") {
+            let passed = MainActor.assumeIsolated { verifyShaders() }
+            exit(passed ? 0 : 1)
+        }
         return false
+    }
+
+    /// Compiles every runtime-compiled Metal shader, so CI catches errors
+    /// that would otherwise only show up as a blank stage.
+    @MainActor
+    private static func verifyShaders() -> Bool {
+        guard MTLCreateSystemDefaultDevice() != nil else {
+            print("No Metal device available; skipping shader verification.")
+            return true
+        }
+        switch FractalGPU.shared {
+        case .success(let gpu):
+            print("Fractal shaders compiled for \(gpu.device.name).")
+            return true
+        case .failure(let error):
+            FileHandle.standardError.write(Data("Fractal shaders failed to compile:\n\(error)\n".utf8))
+            return false
+        }
     }
 }

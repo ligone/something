@@ -61,6 +61,9 @@ jobs:
       - name: Build the app bundle
         run: Scripts/build-app.sh --universal
 
+      - name: Verify Metal shaders
+        run: ./build/Menagerie.app/Contents/MacOS/Menagerie --verify-shaders
+
       - name: Tour the app and capture screenshots
         run: |
           mkdir -p build/screenshots

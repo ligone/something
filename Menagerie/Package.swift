@@ -12,6 +12,7 @@ import PackageDescription
 let engines = [
     "CalculusKit",
     "ConnectFourKit",
+    "FractalKit",
     "LifeKit",
     "MazeKit",
     "ProseKit",
