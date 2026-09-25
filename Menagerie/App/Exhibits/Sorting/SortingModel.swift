@@ -104,8 +104,18 @@ final class SortingModel {
             let steps = Double(primaryLane?.totalSteps ?? 1_000)
             speed = min(max(steps / 11, 20), Self.speedRange.upperBound)
             play()
-        } else if !isPrepared {
-            prepareTraces(debounce: false)
+        } else {
+            // Sound is the point of this exhibit, so it starts on. The audio
+            // engine itself still waits for the first tone.
+            if !isSoundOn {
+                isSoundOn = true
+                let synth = self.synth ?? SortingBlipSynth()
+                synth.volume = Float(volume)
+                self.synth = synth
+            }
+            if !isPrepared {
+                prepareTraces(debounce: false)
+            }
         }
     }
 
