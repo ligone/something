@@ -52,8 +52,9 @@ It uploads the app and the screenshots as artifacts.
 
 ## Status
 
-This was built in a Claude Code on the web session on branch `claude/hopeful-babbage-djjew8`, then tried by hand on a Mac (macOS 26, Apple silicon, a 4K display). All nine exhibits work at large window sizes, including mouse, trackpad and wheel input. That pass turned up three bugs, now fixed: a Particle Life crash when the species count drops, the Fractal Explorer's half-resolution draft smearing while zooming, and Language Lab's cards spreading into one thin row on very wide windows.
+This was built in a Claude Code on the web session on branch `claude/hopeful-babbage-djjew8`, then tried by hand on a Mac (macOS 26, Apple silicon, a 4K display). All nine exhibits work at large window sizes, with mouse clicks, drags and the scroll wheel. That pass turned up three bugs, now fixed: a Particle Life crash when the species count drops, the Fractal Explorer's half-resolution draft smearing while zooming, and Language Lab's cards spreading into one thin row on very wide windows.
 
 Still untested by hand:
 - what the two audio exhibits sound like (their visuals respond, so the audio graph runs);
+- trackpad gestures (two-finger pan, pinch zoom) and keyboard controls inside exhibits;
 - Light Mode, and windows smaller than CI's 1100×752.
