@@ -145,6 +145,14 @@ main() {
 
     has_terminal || finish "To continue with Claude, run: cd \"$REPO_DIR\" && claude --teleport $SESSION"
 
+    # Claude Code reads the keyboard from its standard input, which under
+    # curl | bash is this script. Hand it the terminal's own device, such as
+    # /dev/ttys003. Not /dev/tty: on macOS, Claude Code watches its input with
+    # kqueue, which rejects /dev/tty ("EINVAL: invalid argument, kqueue").
+    TERMINAL="/dev/$(ps -o tty= -p $$ | tr -d '[:space:]')"
+    [[ -c "$TERMINAL" && -r "$TERMINAL" ]] \
+        || finish "To continue with Claude, run: cd \"$REPO_DIR\" && claude --teleport $SESSION"
+
     CLAUDE_BIN="$(command -v claude || true)"
     if [[ -z "$CLAUDE_BIN" && -x "$HOME/.local/bin/claude" ]]; then
         CLAUDE_BIN="$HOME/.local/bin/claude"
@@ -153,7 +161,8 @@ main() {
         step "Claude Code isn't installed yet"
         if ask "Install it now with Anthropic's official installer?" y; then
             curl -fsSL https://claude.ai/install.sh | bash
-            # The installer updates PATH for new shells only, so use its launcher directly.
+            # The installer puts the launcher in ~/.local/bin, which often isn't
+            # on PATH yet, so use it directly.
             if [[ -x "$HOME/.local/bin/claude" ]]; then
                 CLAUDE_BIN="$HOME/.local/bin/claude"
             else
@@ -170,22 +179,29 @@ main() {
             step "Opening Claude Code with the cloud session's conversation"
             note "Sign in with your claude.ai account if asked. Type /remote-control inside"
             note "to keep steering this session from the Claude app on your phone."
-            if ! "$CLAUDE_BIN" --teleport "$SESSION" </dev/tty; then
-                note "If the conversation couldn't be brought over, run /login in Claude Code and try"
-                note "again, or start a fresh session from a handoff note with:"
-                note "  MENAGERIE_CLAUDE=fresh \"$REPO_DIR/Menagerie/Scripts/setup-mac.sh\""
+            if ! "$CLAUDE_BIN" --teleport "$SESSION" <"$TERMINAL"; then
+                note "If the conversation didn't come over, run /login in Claude Code, then try"
+                note "again from $REPO_DIR with:"
+                note "  $CLAUDE_BIN --teleport $SESSION"
             fi
             ;;
         fresh)
             step "Opening a new Claude Code session with a handoff note"
-            "$CLAUDE_BIN" --name Menagerie "$HANDOFF" </dev/tty
+            "$CLAUDE_BIN" --name Menagerie "$HANDOFF" <"$TERMINAL"
             ;;
         remote)
             step "Opening Claude Code with Remote Control"
             note "It appears in the Claude app and at claude.ai/code as \"Menagerie\"."
-            "$CLAUDE_BIN" --remote-control Menagerie </dev/tty
+            "$CLAUDE_BIN" --remote-control Menagerie <"$TERMINAL"
             ;;
     esac
+
+    if ! command -v claude >/dev/null 2>&1; then
+        printf '\n'
+        note "Claude Code is in ~/.local/bin, which isn't on your PATH, so typing plain \`claude\`"
+        note "won't find it yet. To fix that for new terminal windows, run:"
+        note "  echo 'export PATH=\"\$HOME/.local/bin:\$PATH\"' >> ~/.zshrc"
+    fi
 }
 
 # Nothing above runs until bash has read the whole file, so a download that

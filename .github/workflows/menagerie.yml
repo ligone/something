@@ -111,17 +111,42 @@ jobs:
           path: Menagerie/build/screenshots
           if-no-files-found: warn
 
-      # The one-line setup a person runs on their Mac, end to end: download the
-      # script from GitHub, clone into a fresh folder, build, install and add
-      # the Desktop shortcut. Claude Code isn't launched on CI.
+      # The one-line setup a person runs on their Mac, end to end and in a
+      # terminal: download the script from GitHub, clone into a fresh folder,
+      # build, install, add the Desktop shortcut and open Claude Code. With no
+      # account signed in, Claude Code stops at its first screen (the theme
+      # picker), which is far enough to show it can read the terminal.
       - name: One-line Mac setup (curl | bash)
         if: matrix.xcode == 'newest' && github.event_name == 'push'
         env:
           SETUP_URL: https://raw.githubusercontent.com/${{ github.repository }}/refs/heads/${{ github.ref_name }}/Menagerie/Scripts/setup-mac.sh
+          MENAGERIE_BRANCH: ${{ github.ref_name }}
         run: |
+          curl -fsSL https://claude.ai/install.sh | bash
           rm -rf "$HOME/Desktop/Menagerie" "$HOME/Applications/Menagerie.app"
-          curl -fsSL "$SETUP_URL" \
-            | MENAGERIE_DIR="$RUNNER_TEMP/fresh-clone" MENAGERIE_BRANCH="${{ github.ref_name }}" MENAGERIE_CLAUDE=none bash
+          cat > "$RUNNER_TEMP/first-screen.exp" <<'EOF'
+          # expect first-screen.exp <command>: runs the command in a terminal
+          # and passes once Claude Code shows its first screen and keeps running.
+          set timeout 900
+          match_max 100000
+          spawn bash -c [lindex $argv 0]
+          expect {
+            -re {kqueue|EINVAL} { puts "\n>>> Claude Code crashed reading the terminal"; exit 1 }
+            -ex {/theme} {}
+            timeout { puts "\n>>> Claude Code never started"; exit 1 }
+            eof { puts "\n>>> It ended before Claude Code started"; exit 1 }
+          }
+          set timeout 10
+          expect {
+            -re {kqueue|EINVAL} { puts "\n>>> Claude Code crashed reading the terminal"; exit 1 }
+            eof { puts "\n>>> Claude Code quit by itself"; exit 1 }
+            timeout { puts "\n>>> Claude Code is running and waiting for sign-in"; exit 0 }
+          }
+          EOF
+          echo "::group::For comparison: Claude Code reading /dev/tty, as the script once had it do"
+          expect "$RUNNER_TEMP/first-screen.exp" "$HOME/.local/bin/claude </dev/tty" || true
+          echo "::endgroup::"
+          MENAGERIE_DIR="$RUNNER_TEMP/fresh-clone" expect "$RUNNER_TEMP/first-screen.exp" "curl -fsSL '$SETUP_URL' | bash"
           test -d "$RUNNER_TEMP/fresh-clone/Menagerie/build/Menagerie.app"
           test -L "$HOME/Desktop/Menagerie"
           codesign --verify --strict "$HOME/Applications/Menagerie.app"
