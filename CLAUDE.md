@@ -52,9 +52,9 @@ It uploads the app and the screenshots as artifacts.
 
 ## Status
 
-This was built in a Claude Code on the web session on branch `claude/hopeful-babbage-djjew8`, then tried by hand on a Mac (macOS 26, Apple silicon, a 4K display). All nine exhibits work at large window sizes, with mouse clicks, drags and the scroll wheel, and Sound of Sorting sounds right. That pass turned up three bugs, now fixed: a Particle Life crash when the species count drops, the Fractal Explorer's half-resolution draft smearing while zooming, and Language Lab's cards spreading into one thin row on very wide windows.
+This was built in a Claude Code on the web session on branch `claude/hopeful-babbage-djjew8`, then tried by hand on a Mac (macOS 26, Apple silicon, a 4K display). All nine exhibits work at large window sizes, with mouse clicks, drags and the scroll wheel, and the Synthesizer's "Play me something" sounds right. That pass turned up three bugs, now fixed: a Particle Life crash when the species count drops, the Fractal Explorer's half-resolution draft smearing while zooming, and Language Lab's cards spreading into one thin row on very wide windows.
 
 Still untested by hand:
-- how the Synthesizer sounds (its scope and spectrum respond, so audio is flowing);
+- how Sound of Sorting sounds (it now starts with sound on);
 - trackpad gestures (two-finger pan, pinch zoom) and keyboard controls inside exhibits;
 - Light Mode, and windows smaller than CI's 1100×752.
