@@ -98,7 +98,7 @@ struct SpeciesMatrixEditor: View {
     }
 
     private func cellView(row: Int, column: Int, size: CGFloat) -> some View {
-        let value = matrix[row, column]
+        let value = attraction(row: row, column: column)
         let cell = MatrixCell(row: row, column: column)
         let isFocused = focus == cell
         let isMirror = model.isSymmetric && row != column && focus == cell.mirrored
@@ -108,8 +108,17 @@ struct SpeciesMatrixEditor: View {
             .accessibilityValue(MatrixReadout.describe(value))
             .accessibilityAdjustableAction { direction in
                 let step: Float = direction == .increment ? 0.1 : -0.1
-                model.setAttraction(model.matrix[row, column] + step, row: row, column: column)
+                model.setAttraction(attraction(row: row, column: column) + step, row: row, column: column)
             }
+    }
+
+    /// The matrix entry, or 0 for a cell that is on its way out. When the
+    /// species count drops, SwiftUI can re-render a ForEach child for the old,
+    /// larger grid before it removes that child, so its row or column may no
+    /// longer exist.
+    private func attraction(row: Int, column: Int) -> Float {
+        guard row < count, column < count else { return 0 }
+        return matrix[row, column]
     }
 
     /// The cell under a point in the grid's own coordinates. Points in the
