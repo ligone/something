@@ -83,7 +83,7 @@ extension LanguageLab {
         var body: some View {
             if let analysis = model.analysis, !analysis.isEmpty {
                 let isMultilingual = analysis.sentenceLanguages.count > 1
-                MasonryLayout(minimumColumnWidth: 330, spacing: 14) {
+                MasonryLayout(minimumColumnWidth: 330, maximumColumns: 3, spacing: 14) {
                     if isMultilingual {
                         LanguageCard(model: model, analysis: analysis)
                     }

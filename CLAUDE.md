@@ -52,9 +52,8 @@ It uploads the app and the screenshots as artifacts.
 
 ## Status
 
-This was built in a Claude Code on the web session on branch `claude/hopeful-babbage-djjew8`. Everything compiles, and every exhibit renders correctly in CI screenshots. Nothing has been tried by hand yet:
-- mouse and trackpad gestures, scroll and pinch zoom, and keyboard shortcuts;
-- audio in Sound of Sorting and Synthesizer;
-- layouts larger than CI's 1100×752 window, and Dark Mode (CI runs in Light Mode).
+This was built in a Claude Code on the web session on branch `claude/hopeful-babbage-djjew8`, then tried by hand on a Mac (macOS 26, Apple silicon, a 4K display). All nine exhibits work at large window sizes, including mouse, trackpad and wheel input. The fixes that pass turned up were a Particle Life crash when the species count drops, the Fractal Explorer's half-resolution draft smearing while zooming, and Language Lab's cards spreading into one thin row on very wide windows.
 
-A good first task on a Mac: run `Scripts/install.sh`, open the app, try every exhibit, and fix whatever misbehaves.
+Still untested by hand:
+- what the two audio exhibits sound like (their visuals respond, so the audio graph runs);
+- Light Mode, and windows smaller than CI's 1100×752.

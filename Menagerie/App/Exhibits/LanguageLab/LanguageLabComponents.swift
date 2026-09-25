@@ -169,6 +169,8 @@ extension LanguageLab {
     /// many columns as fit.
     struct MasonryLayout: Layout {
         var minimumColumnWidth: CGFloat = 340
+        /// On very wide stages, wider cards read better than one long row.
+        var maximumColumns: Int = .max
         var spacing: CGFloat = 14
 
         func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
@@ -194,7 +196,7 @@ extension LanguageLab {
         }
 
         private func arrange(_ subviews: Subviews, width: CGFloat) -> [CGRect] {
-            let columns = max(1, Int((width + spacing) / (minimumColumnWidth + spacing)))
+            let columns = min(maximumColumns, max(1, Int((width + spacing) / (minimumColumnWidth + spacing))))
             let columnWidth = (width - spacing * CGFloat(columns - 1)) / CGFloat(columns)
             var bottoms = [CGFloat](repeating: 0, count: columns)
             var isEmpty = [Bool](repeating: true, count: columns)
