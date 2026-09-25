@@ -211,11 +211,14 @@ enum FractalShaders {
     }
 
     // Copies the cached fractal image to the screen.
+    // Stretches the fractal over the whole screen: pixel for pixel when the
+    // two match, and smoothly scaled up while a half-resolution draft shows.
     fragment float4 composite_fragment(VertexOut in [[stage_in]],
-                                       texture2d<float> source [[texture(0)]]) {
-        uint2 p = uint2(in.position.xy);
-        p = min(p, uint2(source.get_width() - 1, source.get_height() - 1));
-        return float4(source.read(p).rgb, 1.0);
+                                       texture2d<float> source [[texture(0)]],
+                                       constant float2 &targetSize [[buffer(0)]]) {
+        constexpr sampler smooth(coord::normalized, address::clamp_to_edge, filter::linear);
+        float2 uv = in.position.xy / targetSize;
+        return float4(source.sample(smooth, uv).rgb, 1.0);
     }
     """#
 }

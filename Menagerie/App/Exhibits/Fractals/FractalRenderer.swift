@@ -149,14 +149,22 @@ final class FractalRenderer: NSObject, MTKViewDelegate {
         let resolution: CGFloat = (precise && interacting) ? 0.5 : 1
         let samples = (!precise && !interacting && model.antialiasing) ? 2 : 1
 
+        // The drawable always matches the window's pixels, so resizing it
+        // never races the frames in flight. Only the fractal itself drops to
+        // a draft resolution; the composite pass scales it up to fit.
+        let screenSize = CGSize(
+            width: (size.width * backing).rounded(),
+            height: (size.height * backing).rounded()
+        )
+        if view.drawableSize != screenSize {
+            view.drawableSize = screenSize
+        }
         let pixelSize = CGSize(
             width: (size.width * backing * resolution).rounded(),
             height: (size.height * backing * resolution).rounded()
         )
-        if view.drawableSize != pixelSize {
-            view.drawableSize = pixelSize
-        }
         let pixelsPerPoint = Double(backing * resolution)
+        let screenPixelsPerPoint = Double(backing)
 
         var main = uniforms(
             viewport: model.viewport,
@@ -177,14 +185,14 @@ final class FractalRenderer: NSObject, MTKViewDelegate {
             var u = uniforms(
                 viewport: insetViewport,
                 kind: .julia(re: c.re, im: c.im),
-                pixelsPerPoint: pixelsPerPoint,
-                size: CGSize(width: rect.width * CGFloat(pixelsPerPoint), height: rect.height * CGFloat(pixelsPerPoint)),
+                pixelsPerPoint: screenPixelsPerPoint,
+                size: CGSize(width: rect.width * backing, height: rect.height * backing),
                 precise: false,
                 samples: interacting ? 1 : 2
             )
-            u.originX = Float(rect.minX * CGFloat(pixelsPerPoint))
-            u.originY = Float(rect.minY * CGFloat(pixelsPerPoint))
-            u.cornerRadius = Float(14 * pixelsPerPoint)
+            u.originX = Float(rect.minX * backing)
+            u.originY = Float(rect.minY * backing)
+            u.cornerRadius = Float(14 * screenPixelsPerPoint)
             u.maxIterations = 300
             inset = u
         }
@@ -220,9 +228,14 @@ final class FractalRenderer: NSObject, MTKViewDelegate {
         screen.colorAttachments[0].texture = drawable.texture
         screen.colorAttachments[0].loadAction = .dontCare
         screen.colorAttachments[0].storeAction = .store
+        // Size everything on screen by the drawable actually handed out,
+        // which can briefly lag a change to drawableSize.
+        let target = CGSize(width: drawable.texture.width, height: drawable.texture.height)
         if let encoder = commandBuffer.makeRenderCommandEncoder(descriptor: screen), let mainTexture {
             encoder.setRenderPipelineState(gpu.compositePipeline)
             encoder.setFragmentTexture(mainTexture, index: 0)
+            var targetSize = SIMD2<Float>(Float(target.width), Float(target.height))
+            encoder.setFragmentBytes(&targetSize, length: MemoryLayout<SIMD2<Float>>.stride, index: 0)
             encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 3)
 
             if var inset {
@@ -231,7 +244,7 @@ final class FractalRenderer: NSObject, MTKViewDelegate {
                 let w = Double(inset.width)
                 let h = Double(inset.height)
                 encoder.setViewport(MTLViewport(originX: x, originY: y, width: w, height: h, znear: 0, zfar: 1))
-                encoder.setScissorRect(Self.scissor(x: x, y: y, width: w, height: h, limit: pixelSize))
+                encoder.setScissorRect(Self.scissor(x: x, y: y, width: w, height: h, limit: target))
                 encoder.setRenderPipelineState(gpu.fractalPipeline)
                 encoder.setFragmentBytes(&inset, length: MemoryLayout<FractalUniforms>.stride, index: 0)
                 encoder.setFragmentTexture(paletteTexture, index: 0)
